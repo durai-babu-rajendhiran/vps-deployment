@@ -4,62 +4,9 @@ To connect your VPS server, you can use your server IP, you can create a root pa
 
 ## Creating SSH Key
 
-### For MAC OS / Linux / Windows 10 (with openssh)
-
-1. Launch the Terminal app.
-2. ```ssh-keygen -t rsa```
-3. Press ```ENTER``` to store the key in the default folder /Users/lamadev/.ssh/id_rsa).
-
-4. Type a passphrase (characters will not appear in the terminal).
-
-5. Confirm your passphrase to finish SSH Keygen. You should get an output that looks something like this:
-
-``` Your identification has been saved in /Users/lamadev/.ssh/id_rsa.
-Your public key has been saved in /Users/lamadev/.ssh/id_rsa.pub.
-The key fingerprint is:
-ae:89:72:0b:85:da:5a:f4:7c:1f:c2:43:fd:c6:44:30 lamadev@mac.local
-The key's randomart image is:
-+--[ RSA 2048]----+
-|                 |
-|         .       |
-|        E .      |
-|   .   . o       |
-|  o . . S .      |
-| + + o . +       |
-|. + o = o +      |
-| o...o * o       |
-|.  oo.o .        |
-+-----------------+ 
-```
-6. Copy your public SSH Key to your clipboard using the following code:
-```pbcopy < ~/.ssh/id_rsa.pub```
-
-### For Windows
-1. Download PuTTY and PuTTYgen.
-2. Open up PuTTYgen and click the ```Generate```.
-3. Copy your key.
-4. Enter a key passphrase and confirm.
-5. Save the private key.
-
-
-## Connection
-
-After copying the SSH Key go the to hosting service provider dashboard and paste your key and save. After,
-
-### For MAC OS / Linux
-
 ```bash
 ssh root@<server ip address> 
 ```
-
-### For Windows
-
-1. Open the PuTTY app.
-2. Enter your IP address.
-3. Open the following section:
-Connection - SSH - Auth
-4. Browse the folders and choose your private key.
-
 ## First Configuration
 
 ### Deleting apache server
@@ -124,14 +71,14 @@ ufw allow "Nginx Full"
 
 #### First configuration
 ```
- nano /etc/nginx/sites-available/netflix
+ nano /etc/nginx/sites-available/dbinfo
 ```
 ```
 server {
   listen 80;
 
   location / {
-        root /var/www/netflix;
+        root /var/www/dbinfo;
         index  index.html index.htm;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -145,13 +92,13 @@ server {
 ```
 
 ```
-ln -s /etc/nginx/sites-available/netflix /etc/nginx/sites-enabled/netflix
+ln -s /etc/nginx/sites-available/dbinfo /etc/nginx/sites-enabled/dbinfo
 
 ```
 
 ##### Write your fist message
 ```
-nano /var/www/netflix/index.html
+nano /var/www/dbinfo/index.html
 
 ```
 
@@ -168,10 +115,10 @@ apt install git
 ```
 
 ```
-mkdir netflix
+mkdir dbinfo
 ```
 ```
-cd netflix
+cd dbinfo
 ```
 
 ```
@@ -180,7 +127,7 @@ git clone <your repository>
 
 ## Nginx Configuration for new apps
 ```
-nano /etc/nginx/sites-available/netflix
+nano /etc/nginx/sites-available/dbinfo
 ```
 ```
 location /api {
@@ -253,20 +200,20 @@ npm run build
 Right now, we should move this build file into the main web file
 
 ```
-rm -rf /var/www/netflix/*
+rm -rf /var/www/dbinfo/*
 ```
 ```
-mkdir /var/www/netflix/client
+mkdir /var/www/dbinfo/client
 ```
 
 ```
-cp -r build/* /var/www/netflix/client
+cp -r build/* /var/www/dbinfo/client
 ```
 
 Let's make some server configuration
 ```
  location / {
-        root /var/www/netflix/client/;
+        root /var/www/dbinfo/client/;
         index  index.html index.htm;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -288,10 +235,10 @@ Let's make some server configuration
 ```
 server {
  listen 80;
- server_name safakkocaoglu.com www.safakkocaoglu.com;
+ server_name dbinfo.com www.dbinfo.com;
 
 location / {
- root /var/www/netflix/client;
+ root /var/www/dbinfo/client;
  index  index.html index.htm;
  proxy_http_version 1.1;
  proxy_set_header Upgrade $http_upgrade;
@@ -304,7 +251,7 @@ location / {
 
 server {
   listen 80;
-  server_name api.safakkocaoglu.com;
+  server_name api.dbinfo.com;
   location / {
     proxy_pass http://45.90.108.107:8800;
     proxy_http_version 1.1;
@@ -319,7 +266,7 @@ server {
   listen 80;
   server_name admin.safakkocaoglu.com;
   location / {
-    root /var/www/netflix/admin;
+    root /var/www/dbinfo/admin;
     index  index.html index.htm;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
@@ -342,7 +289,7 @@ ufw status
 ```
 
 ```
-certbot --nginx -d example.com -d www.example.com
+certbot --nginx -d dbinfo.com -d www.dbinfo.com
 ```
 
 Let’s Encrypt’s certificates are only valid for ninety days. To set a timer to validate automatically:
