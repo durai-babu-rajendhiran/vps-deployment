@@ -57,4 +57,10 @@ sudo systemctl enable myproject
 ```
 sudo systemctl status myproject
 ```
+## 4. Check Project Console
+```
+sudo journalctl -u myproject -f
+```
+
+
 
